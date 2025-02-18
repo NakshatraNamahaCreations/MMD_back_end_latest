@@ -168,6 +168,7 @@ router.post("/paytm/callback", async (req, res) => {
           mobile: `91${transaction.mobilenumber}`,
           name: transaction ? transaction.name : "Customer",
           var1: orderid,
+          service:service
         };
         const smsResponse = await axios.post(
           "https://api.makemydocuments.in/api/send-sms",

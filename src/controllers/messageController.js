@@ -21,6 +21,7 @@ export const sendMessage = async (req, res) => {
         templateId = process.env.MSG91_TEMPLATE_PAN;
         break;
       case "SeniorCitizen":
+        
         templateId = process.env.MSG91_TEMPLATE_SENIOR;
         break;
       default:

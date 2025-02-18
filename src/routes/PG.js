@@ -166,7 +166,7 @@ router.post("/paytm/callback", async (req, res) => {
         const transaction = await Lead.findOne({ PGID: orderid });
 
         const smsPayload = {
-          mobile: transaction.mobilenumber,
+          mobile: `91${transaction.mobilenumber}`,
           name: transaction ? transaction.name : "Customer",
           var1: orderid,
         };

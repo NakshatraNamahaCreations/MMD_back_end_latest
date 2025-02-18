@@ -117,7 +117,7 @@ router.post("/paytm/callback", async (req, res) => {
 
     // Update transaction status in MongoDB
     const transaction = await Lead.findOneAndUpdate(
-      { PGID: orderid },
+      { orderId: orderid },
       { paymentStatus },
       { new: true }
     );

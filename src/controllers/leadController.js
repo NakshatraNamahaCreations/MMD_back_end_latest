@@ -116,6 +116,7 @@ export const getAllLeads = async (req, res) => {
       permission = "full-access";
     } else {
       leads = await Lead.find({
+        assign: user.name,
         $or: [
           { status: { $nin: ["followup", "overdue", "dead", "In Progress", "converted"] } },
           { status: { $exists: false } }, 

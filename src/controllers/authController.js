@@ -149,27 +149,31 @@ export const forgotPassword = async (req, res) => {
       return res.status(400).json({ message: "User not found!" });
     }
 
-    // ✅ Extract username and password from the database
     const { username, password, name } = user;
-
-    // ✅ Create a test email account using Ethereal
+  
     let testAccount = await nodemailer.createTestAccount();
 
-    // ✅ Create transporter with Ethereal credentials
+ 
+    // let transporter = nodemailer.createTransport({
+    //   host: "smtp.ethereal.email",
+    //   port: 587,
+    //   secure: false,
+    //   auth: {
+    //     user: "developernnc@gmail.com" , 
+    //     pass:"piqd sqta jfjh tcxn",
+    //   },
+    // });
     let transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      secure: false,
+      service: "gmail",
       auth: {
-        user: testAccount.user, // Fake email from Ethereal
-        pass: testAccount.pass, // Fake password from Ethereal
+        user: "developersnnc@gmail.com" , 
+        pass:"piqdsqtajfjhtcxn",
       },
     });
 
-    // ✅ Send username & password via email
     let mailOptions = {
-      from: `"Support Team" <${testAccount.user}>`, // Fake sender
-      to: user.email, // ✅ Send to the actual user
+      from: `"Support Team" <"developersnnc@gmail.com">`, 
+      to: user.email,
       subject: "Your Account Credentials",
       html: `
         <p>Dear ${name},</p>

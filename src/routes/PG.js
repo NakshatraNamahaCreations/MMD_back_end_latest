@@ -74,7 +74,6 @@ router.post("/paytm/callback", async (req, res) => {
 
     const orderid = ORDERID;
     const service = req.query.service;
-    console.log("Paytm Callback Receiveddddddddd:", service);
 
     if (!CHECKSUMHASH) {
       console.error("Missing CHECKSUMHASH in response.");
@@ -117,7 +116,7 @@ router.post("/paytm/callback", async (req, res) => {
 
     // Update transaction status in MongoDB
     const transaction = await Lead.findOneAndUpdate(
-      { orderId: orderid },
+      { PGID: orderid },
       { paymentStatus },
       { new: true }
     );

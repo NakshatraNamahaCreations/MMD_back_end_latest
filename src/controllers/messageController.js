@@ -5,7 +5,7 @@ dotenv.config({ path: "../../.env" });
 
 export const sendMessage = async (req, res) => {
   try {
-    const { mobile, name, var1 } = req.body;
+    const { mobile, name, var1, service } = req.body;
 
     if (!mobile) {
       return res.status(400).json({
@@ -14,9 +14,29 @@ export const sendMessage = async (req, res) => {
       });
     }
 
+
+    let templateId;
+    switch (service) {
+      case "PanCard":
+        templateId = process.env.MSG91_TEMPLATE_PAN;
+        break;
+      case "SeniorCitizen":
+        templateId = process.env.MSG91_TEMPLATE_SENIOR;
+        break;
+      default:
+        templateId = process.env.MSG91_TEMPLATE_DEFAULT; 
+    }
+
+    if (!templateId) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: "No template ID found for the provided service.",
+      });
+    }
+
     const url = "https://api.msg91.com/api/v5/flow/";
     const payload = {
-      flow_id: process.env.MSG91_TEMPLATE_ID,
+      flow_id: templateId,
       sender: process.env.MSG91_SENDER_ID,
       mobiles: mobile,
       name: name || "Customer",
@@ -26,12 +46,12 @@ export const sendMessage = async (req, res) => {
     const headers = {
       authkey: process.env.MSG91_AUTH_KEY,
       "Content-Type": "application/json",
-    };  
+    };
 
     const response = await axios.post(url, payload, { headers });
     return res.json({ status: response.status, response: response.data });
   } catch (error) {
-    console.error("Error sending SMS:", error);
+    console.error("Error sending SMS:", error.response?.data || error.message);
     return res.status(500).json({
       status: "error",
       message: "Failed to send SMS",
@@ -39,7 +59,6 @@ export const sendMessage = async (req, res) => {
     });
   }
 };
-
 export const sendPanMessage = async (req, res) => {
   try {
     const { mobile, var1, var2 } = req.body;

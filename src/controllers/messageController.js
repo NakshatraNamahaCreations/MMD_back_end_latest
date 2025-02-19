@@ -17,7 +17,7 @@ export const sendMessage = async (req, res) => {
 
     let templateId;
     switch (service) {
-      case "PanCard":
+      case "Pancard":
         templateId = process.env.MSG91_TEMPLATE_PAN;
         break;
       case "SeniorCitizen":

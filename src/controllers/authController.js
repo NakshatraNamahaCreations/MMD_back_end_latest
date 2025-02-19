@@ -188,7 +188,7 @@ export const forgotPassword = async (req, res) => {
 
     let info = await transporter.sendMail(mailOptions);
 
-    // ✅ Log email preview URL for testing
+
     console.log("Email sent! Preview URL:", nodemailer.getTestMessageUrl(info));
 
     return res.status(200).json({

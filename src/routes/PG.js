@@ -2,7 +2,7 @@ import PaytmChecksum from "paytmchecksum";
 import PaymentModel from "../models/PG.js"; // Ensure your model is correctly imported
 import express from "express";
 import dotenv from "dotenv";
-
+import nodemailer from "nodemailer";
 const router = express.Router();
 import Lead from "../models/Lead.js";
 import axios from "axios";
@@ -32,7 +32,7 @@ router.post("/paytm/initiate", async (req, res) => {
 
     let paramList = {
       MID: paytmConfig.MID,
-      ORDER_ID: ORDER_ID, // Make sure this is dynamically assigned
+      ORDER_ID: ORDER_ID, 
       CUST_ID: CUST_ID,
       INDUSTRY_TYPE_ID: paytmConfig.INDUSTRY_TYPE_ID,
       CHANNEL_ID: paytmConfig.CHANNEL_ID,
@@ -120,9 +120,6 @@ router.post("/paytm/callback", async (req, res) => {
       { paymentStatus },
       { new: true }
     );
-    if (transaction) {
-      console.log("The first check", orderid);
-    }
     if (!transaction) {
       console.error(`Transaction not found for Order ID: ${orderid}`);
       return res
@@ -160,14 +157,56 @@ router.post("/paytm/callback", async (req, res) => {
     //     smsError.response?.data || smsError.message
     //   );
     // }
+    let transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "developersnnc@gmail.com" , 
+        pass:"piqdsqtajfjhtcxn",
+      },
+    });
+    
     if (paymentStatus === "PAID") {
       try {
         const transaction = await Lead.findOne({ PGID: orderid });
+        let serviceMessage = "";
+        let documentUploadLink = "https://m.9m.io/MMDOCS/bjs4bd6"; 
+    
 
+        switch (service) {
+          case "SeniorCitizen":
+            serviceMessage = `We have received your application for a <strong>Senior Citizen Card</strong>. Please upload your documents for further processing by clicking the link below:`;
+            break;
+          case "Pancard":
+            serviceMessage = `We have received your <strong>Pancard</strong> application. Kindly upload your required documents using the link below:`;
+            break;
+          default:
+            serviceMessage = `We have received your request. One of our executive will get back to you shortly. For any queries please call: 9429690973`;
+        }
+    
+       
+          const mailOptions = {
+            from: "developersnnc@gmail.com",
+            to: transaction.email,
+            subject: "Payment Successful - MakeMyDocuments",
+            html: `
+          <h2>Payment Confirmation</h2>
+          <p>Dear ${transaction.name || "Customer"},</p>
+          <p>${serviceMessage}</p>
+          <p><a href="${documentUploadLink}" style="color: blue; font-weight: bold;">Upload Documents</a></p>
+          <p>Thank you for choosing MakeMyDocuments.</p>
+          <br>
+          <p>Best Regards,<br>MakeMyDocuments Team</p>
+        `,
+         
+          };
+    
+          await transporter.sendMail(mailOptions);
+          console.log("Success Email Sent to:", transaction.email);
+     
         const smsPayload = {
           mobile: `91${transaction.mobilenumber}`,
           name: transaction ? transaction.name : "Customer",
-          var1: orderid,
+          var1: "https://m.9m.io/MMDOCS/bjs4bd6",
           service:service
         };
         const smsResponse = await axios.post(

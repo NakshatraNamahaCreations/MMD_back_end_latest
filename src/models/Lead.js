@@ -84,7 +84,6 @@ const leadSchema = new mongoose.Schema(
     tenantPincode: { type: String, default: "" },
     state: { type: String, default: "" },
     age: { type: String, default: "" },
-    PGID: { type: String, default: "" },
 
     updated_by: { type: String, default: "" },
     paymentStatus: {

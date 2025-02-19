@@ -18,6 +18,7 @@ const paytmConfig = {
   INDUSTRY_TYPE_ID: "Retail",
   CHANNEL_ID: "WEB",
   CALLBACK_URL: "https://api.makemydocuments.in/api/PG/paytm/callback",
+
 };
 
 router.post("/paytm/initiate", async (req, res) => {
@@ -29,6 +30,7 @@ router.post("/paytm/initiate", async (req, res) => {
         .status(400)
         .json({ status: "error", message: "Missing required parameters" });
     }
+    const transaction = await Lead.findOne({ orderId: ORDER_ID }); 
 
     let paramList = {
       MID: paytmConfig.MID,
@@ -116,7 +118,7 @@ router.post("/paytm/callback", async (req, res) => {
 
     // Update transaction status in MongoDB
     const transaction = await Lead.findOneAndUpdate(
-      { PGID: orderid },
+      { orderId: orderid },
       { paymentStatus },
       { new: true }
     );
@@ -167,7 +169,7 @@ router.post("/paytm/callback", async (req, res) => {
     
     if (paymentStatus === "PAID") {
       try {
-        const transaction = await Lead.findOne({ PGID: orderid });
+        const transaction = await Lead.findOne({ orderId: orderid });
         let serviceMessage = "";
         let documentUploadLink = "https://m.9m.io/MMDOCS/bjs4bd6"; 
     

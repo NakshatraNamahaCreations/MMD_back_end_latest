@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 
 export const  createLead = async (req, res) => {
   try {
-   console.log(req.body.PGID,"pgid")
+
     if (!req.body || Object.keys(req.body).length === 0) {
       return res
         .status(400)
@@ -58,7 +58,7 @@ export const  createLead = async (req, res) => {
           ? parseInt(lastLead.orderId.replace("MMD2025", ""), 10) + 1
           : 1;
 
-      const orderId = `MMD2025${String(lastId).padStart(4, "0")}`;
+      const orderId = `MMD20250${String(lastId).padStart(5, "0")}`;
 
     
       const newLead = new Lead({ ...leadData, orderId });

@@ -162,8 +162,10 @@ router.post("/paytm/callback", async (req, res) => {
     let transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "developersnnc@gmail.com" , 
-        pass:"piqdsqtajfjhtcxn",
+        user: "support@makemydocuments.com", 
+        pass:"LvVWgUdJRsqi",
+
+
       },
     });
     
@@ -176,10 +178,10 @@ router.post("/paytm/callback", async (req, res) => {
 
         switch (service) {
           case "SeniorCitizen":
-            serviceMessage = `We have received your application for a <strong>Senior Citizen Card</strong>. Please upload your documents for further processing by clicking the link below:`;
+            serviceMessage = `We have received your Senior Citizen Card application. Please upload your documents via WhatsApp for eKYC and eSign to process further.`;
             break;
           case "Pancard":
-            serviceMessage = `We have received your <strong>Pancard</strong> application. Kindly upload your required documents using the link below:`;
+            serviceMessage = `We have received your PAN card application. Please upload your documents via WhatsApp for eKYC and eSign to process further.`;
             break;
           default:
             serviceMessage = `We have received your request. One of our executive will get back to you shortly. For any queries please call: 9429690973`;

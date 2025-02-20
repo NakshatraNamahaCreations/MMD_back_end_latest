@@ -69,10 +69,22 @@ export const searchRecords = async (req, res) => {
     ];
 
     const query = {
-      $or: searchFields.map((field) => ({
-        [field]: { $regex: search, $options: "i" },
-      })),
+      $and: [
+        {
+          $or: searchFields.map((field) => ({
+            [field]: { $regex: search, $options: "i" },
+          })),
+        },
+        {
+          $or: [
+            { status: { $nin: ["followup", "overdue", "dead", "In Progress", "converted"] } },
+            { status: { $exists: false } },
+            { status: "" },
+          ],
+        },
+      ],
     };
+
 
     const results = await Lead.find(query).limit(50);
 

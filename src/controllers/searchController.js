@@ -2,7 +2,7 @@ import Lead from "../models/Lead.js";
 
 export const searchRecords = async (req, res) => {
   try {
-    const { search } = req.body;
+    const { search, assign } = req.body;
 
     if (!search || search.trim() === "") {
       return res.status(400).json({
@@ -67,22 +67,11 @@ export const searchRecords = async (req, res) => {
       "age",
       "paymentStatus",
     ];
-
     const query = {
-      $and: [
-        {
-          $or: searchFields.map((field) => ({
-            [field]: { $regex: search, $options: "i" },
-          })),
-        },
-        {
-          $or: [
-            { status: { $nin: ["followup", "overdue", "dead", "In Progress", "converted"] } },
-            { status: { $exists: false } },
-            { status: "" },
-          ],
-        },
-      ],
+      assign:assign,
+      $or: searchFields.map((field) => ({
+        [field]: { $regex: search, $options: "i" },
+      })),
     };
 
 

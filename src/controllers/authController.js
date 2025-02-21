@@ -163,34 +163,54 @@ export const forgotPassword = async (req, res) => {
     //     pass:"piqd sqta jfjh tcxn",
     //   },
     // });
-    let transporter = nodemailer.createTransport({
-      service: "gmail",
+    const transporter = nodemailer.createTransport({
+      host: "smtp.zoho.com",
+      port: 465,
+      secure: true,
       auth: {
-        user: "support@makemydocuments.com" , 
-        pass:"LvVWgUdJRsqi",
-        // pass:"piqdsqtajfjhtcxn",
+          user: "support@makemydocuments.com", 
+          pass: "C80Y4z2uCJcd", 
       },
-    });
+      tls: {
+          rejectUnauthorized: false, 
+      },
+  });
 
-    let mailOptions = {
-      from: `"Support Team" <"support@makemydocuments.com">`, 
-      to: user.email,
-      subject: "Your Account Credentials",
-      html: `
-        <p>Dear ${name},</p>
-        <p>Your account details are:</p>
-        <p><strong>Username:</strong> ${username}</p>
-        <p><strong>Password:</strong> ${password}</p>
-        <p>For security reasons, please change your password after logging in.</p>
-        <p><a href="https://admin.makemydocuments.in">Go to Login</a></p>
-        <p>Regards,<br>Support Team</p>
-      `,
-    };
+  let mailOptions = {
+    from: `"Support Team" <support@makemydocuments.com>`, 
+    to: user.email,
+    subject: "Your Account Credentials",
+    html: `
+      <p>Dear ${name},</p>
+      <p>Your account details are:</p>
+      <p><strong>Username:</strong> ${username}</p>
+      <p><strong>Password:</strong> ${password}</p>
+      <p>For security reasons, please change your password after logging in.</p>
+      <p><a href="https://admin.makemydocuments.in">Go to Login</a></p>
+      <p>Regards,<br>Support Team</p>
+    `,
+  };
 
-    let info = await transporter.sendMail(mailOptions);
+const info = await transporter.sendMail(mailOptions);
+
+    // let mailOptions = {
+    //   from: `"Support Team" <"support@makemydocuments.com">`, 
+    //   to: user.email,
+    //   subject: "Your Account Credentials",
+    //   html: `
+    //     <p>Dear ${name},</p>
+    //     <p>Your account details are:</p>
+    //     <p><strong>Username:</strong> ${username}</p>
+    //     <p><strong>Password:</strong> ${password}</p>
+    //     <p>For security reasons, please change your password after logging in.</p>
+    //     <p><a href="https://admin.makemydocuments.in">Go to Login</a></p>
+    //     <p>Regards,<br>Support Team</p>
+    //   `,
+    // };
+
+//     let info = await transporter.sendMail(mailOptions);
 
 
-    console.log("Email sent! Preview URL:", nodemailer.getTestMessageUrl(info));
 
     return res.status(200).json({
       message: "Username and password sent to your email.",

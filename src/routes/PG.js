@@ -159,16 +159,19 @@ router.post("/paytm/callback", async (req, res) => {
     //     smsError.response?.data || smsError.message
     //   );
     // }
-    let transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "support@makemydocuments.com", 
-        pass:"LvVWgUdJRsqi",
+     const transporter = nodemailer.createTransport({
+       host: "smtp.zoho.com",
+       port: 465,
+       secure: true,
+       auth: {
+           user: "support@makemydocuments.com", 
+           pass: "C80Y4z2uCJcd", 
+       },
+       tls: {
+           rejectUnauthorized: false, 
+       },
+   });
 
-
-      },
-    });
-    
     if (paymentStatus === "PAID") {
       try {
         const transaction = await Lead.findOne({ orderId: orderid });
@@ -189,7 +192,7 @@ router.post("/paytm/callback", async (req, res) => {
     
        
           const mailOptions = {
-            from: "support@makemydocuments.com",
+            from: `"Support Team" <support@makemydocuments.com>`, 
             to: transaction.email,
             subject: "Payment Successful - MakeMyDocuments",
             html: `
@@ -205,7 +208,6 @@ router.post("/paytm/callback", async (req, res) => {
           };
     
           await transporter.sendMail(mailOptions);
-          console.log("Success Email Sent to:", transaction.email);
      
         const smsPayload = {
           mobile: `91${transaction.mobilenumber}`,

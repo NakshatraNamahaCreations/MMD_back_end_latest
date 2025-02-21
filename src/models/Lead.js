@@ -93,6 +93,8 @@ const leadSchema = new mongoose.Schema(
     source: { type: String, default: "" },
     created_at: { type: Date, default: null },
     returnDate: { type: Date, default: null },
+    applicationType:{type: String, default:null},
+    spouseName:{type: String, default:null},
   },
   { timestamps: true }
 );

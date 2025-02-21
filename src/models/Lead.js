@@ -95,6 +95,7 @@ const leadSchema = new mongoose.Schema(
     returnDate: { type: Date, default: null },
     applicationType:{type: String, default:null},
     spouseName:{type: String, default:null},
+    advancePaidThrough:{type: String, default:null},
   },
   { timestamps: true }
 );

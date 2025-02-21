@@ -30,11 +30,11 @@ router.post("/paytm/initiate", async (req, res) => {
         .status(400)
         .json({ status: "error", message: "Missing required parameters" });
     }
-    const transaction = await Lead.findOne({ orderId: ORDER_ID }); 
+    const transaction = await Lead.findOne({ orderId: ORDER_ID });
 
     let paramList = {
       MID: paytmConfig.MID,
-      ORDER_ID: ORDER_ID, 
+      ORDER_ID: ORDER_ID,
       CUST_ID: CUST_ID,
       INDUSTRY_TYPE_ID: paytmConfig.INDUSTRY_TYPE_ID,
       CHANNEL_ID: paytmConfig.CHANNEL_ID,
@@ -159,25 +159,25 @@ router.post("/paytm/callback", async (req, res) => {
     //     smsError.response?.data || smsError.message
     //   );
     // }
-     const transporter = nodemailer.createTransport({
-       host: "smtp.zoho.com",
-       port: 465,
-       secure: true,
-       auth: {
-           user: "support@makemydocuments.com", 
-           pass: "C80Y4z2uCJcd", 
-       },
-       tls: {
-           rejectUnauthorized: false, 
-       },
-   });
+    const transporter = nodemailer.createTransport({
+      host: "smtp.zoho.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: "support@makemydocuments.com",
+        pass: "C80Y4z2uCJcd",
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
 
     if (paymentStatus === "PAID") {
       try {
         const transaction = await Lead.findOne({ orderId: orderid });
         let serviceMessage = "";
-        let documentUploadLink = "https://m.9m.io/MMDOCS/bjs4bd6"; 
-    
+        let documentUploadLink = "";
+
 
         switch (service) {
           case "SeniorCitizen":
@@ -189,31 +189,38 @@ router.post("/paytm/callback", async (req, res) => {
           default:
             serviceMessage = `We have received your request. One of our executive will get back to you shortly. For any queries please call: 9429690973`;
         }
-    
-       
-          const mailOptions = {
-            from: `"Support Team" <support@makemydocuments.com>`, 
-            to: transaction.email,
-            subject: "Payment Successful - MakeMyDocuments",
-            html: `
+
+        if (["SeniorCitizen", "Pancard"].includes(service)) {
+          serviceMessage = `We have received your ${service} application. Please upload your documents via WhatsApp for eKYC and eSign to process further.`;
+          documentUploadLink = "https://m.9m.io/MMDOCS/bjs4bd6";
+        } else {
+          serviceMessage = `We have received your request. One of our executives will get back to you shortly. For any queries please call: 9429690973`;
+        }
+        const mailOptions = {
+          from: `"Support Team" <support@makemydocuments.com>`,
+          to: transaction.email,
+          subject: "Payment Successful - MakeMyDocuments",
+          html: `
           <h2>Payment Confirmation</h2>
           <p>Dear ${transaction.name || "Customer"},</p>
           <p>${serviceMessage}</p>
-          <p><a href="${documentUploadLink}" style="color: blue; font-weight: bold;">Upload Documents</a></p>
-          <p>Thank you for choosing MakeMyDocuments.</p>
+     ${documentUploadLink
+              ? `<p><a href="${documentUploadLink}" style="color: blue; font-weight: bold;">Upload Documents</a></p>`
+              : ""
+            }          <p>Thank you for choosing MakeMyDocuments.</p>
           <br>
           <p>Best Regards,<br>MakeMyDocuments Team</p>
         `,
-         
-          };
-    
-          await transporter.sendMail(mailOptions);
-     
+
+        };
+
+        await transporter.sendMail(mailOptions);
+
         const smsPayload = {
           mobile: `91${transaction.mobilenumber}`,
           name: transaction ? transaction.name : "Customer",
           var1: "https://m.9m.io/MMDOCS/bjs4bd6",
-          service:service
+          service: service
         };
         const smsResponse = await axios.post(
           "https://api.makemydocuments.in/api/send-sms",

@@ -1,4 +1,5 @@
 import Lead from "../models/Lead.js";
+import User from "../models/User.js";
 
 export const searchRecords = async (req, res) => {
   try {
@@ -10,7 +11,12 @@ export const searchRecords = async (req, res) => {
         message: "Search term is required.",
       });
     }
-
+    if (!assign || assign.trim() === "") {
+      return res.status(400).json({
+          status: "error",
+          message: "'assign' parameter is required.",
+      });
+  }
     const searchFields = [
       "name",
       "mobilenumber",
@@ -67,8 +73,9 @@ export const searchRecords = async (req, res) => {
       "age",
       "paymentStatus",
     ];
+    const user = await User.findOne({ name: assign });
     const query = {
-      assign:assign,
+      assign:user.name,
       $or: searchFields.map((field) => ({
         [field]: { $regex: search, $options: "i" },
       })),

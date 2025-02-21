@@ -74,14 +74,24 @@ export const searchRecords = async (req, res) => {
       "paymentStatus",
     ];
     const user = await User.findOne({ name: assign });
-    const query = {
-      assign:user.name,
-      $or: searchFields.map((field) => ({
+    if (!user) {
+      return res.status(404).json({
+          status: "error",
+          message: `No user found with the name '${assign}'`,
+      });
+  }
+  let query = {
+    $or: searchFields.map((field) => ({
         [field]: { $regex: search, $options: "i" },
-      })),
-    };
+    })),
+};
 
-
+if (user.role !== "admin") {
+  query = {
+      ...query,
+      assign: { $regex: `^${user.name}$`, $options: "i" }
+  };
+}
     const results = await Lead.find(query).limit(50);
 
     res.status(200).json({

@@ -211,14 +211,18 @@ export const getFollowups = async (req, res) => {
       });
     }
 
-    let tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0);
+    let startOfTomorrow = new Date();
+    startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
+    startOfTomorrow.setHours(0, 0, 0, 0);
+
+    let endOfTomorrow = new Date(startOfTomorrow);
+    endOfTomorrow.setHours(23, 59, 59, 999);
 
     let query = {
       status: "followup",
-      followupDate: { $gt: tomorrow }, 
+      followupDate: { $gte: startOfTomorrow },
     };
+
 
     let permission = "view-only";
 
@@ -237,71 +241,6 @@ export const getFollowups = async (req, res) => {
         data: [],
       });
     }
-
-    //   id: doc._id.toString(),
-    //   name: doc.name,
-    //   date: formatDate(doc.date),
-    //   time: formatTime(doc.time),
-    //   source: doc.source,
-    //   service: doc.service,
-    //   address: doc.address,
-    //   email: doc.email,
-    //   mobilenumber: doc.mobilenumber,
-    //   assign: doc.assign,
-    //   district: doc.district,
-    //   pincode: doc.pincode,
-    //   state: doc.state,
-    //   paidAmount: doc.paidAmount,
-    //   followupDate: formatDate(doc.followupDate),
-    //   status: doc.status,
-    //   registrationNumber: doc.registrationNumber,
-    //   registrationDate: formatDate(doc.registrationDate),
-    //   applying_for: doc.applying_for,
-    //   gender: doc.gender,
-    //   age: doc.age,
-    //   disease: doc.disease,
-    //   existingpancardnumber: doc.existingpancardnumber,
-    //   dob: formatDate(doc.dob),
-    //   travellingDate: formatDate(doc.travellingDate),
-    //   returningDate: formatDate(doc.returningDate),
-    //   fathername: doc.fathername,
-    //   mothername: doc.mothername,
-    //   printOnPanCard: doc.printOnPanCard,
-    //   identityOption: doc.identityOption,
-    //   stampPaper: doc.stampPaper,
-    //   ownername: doc.ownername,
-    //   ownerAddress: doc.ownerAddress,
-    //   ownerDistrict: doc.ownerDistrict,
-    //   ownerPincode: doc.ownerPincode,
-    //   tenantName: doc.tenantName,
-    //   tenantaddress: doc.tenantaddress,
-    //   tenantPincode: doc.tenantPincode,
-    //   shiftingdate: formatDate(doc.shiftingdate),
-    //   shiftingaddress: doc.shiftingaddress,
-    //   monthlyrent: doc.monthlyrent,
-    //   shippingaddress: doc.shippingaddress,
-    //   waterCharges: doc.waterCharges,
-    //   paintingCharges: doc.paintingCharges,
-    //   accommodation: doc.accommodation,
-    //   appliancesFittings: doc.appliancesFittings,
-    //   villageTownCity: doc.villageTownCity,
-    //   adharnumber: doc.adharnumber,
-    //   businessName: doc.businessName,
-    //   organisationType: doc.organisationType,
-    //   dateOfIncorporation: formatDate(doc.dateOfIncorporation),
-    //   panNumber: doc.panNumber,
-    //   spouseName: doc.spouseName,
-    //   applicationType: doc.applicationType,
-    //   passportBookletType: doc.passportBookletType,
-    //   qualification: doc.qualification,
-    //   employmentType: doc.employmentType,
-    //   maritalStatus: doc.maritalStatus,
-    //   bloodgroup: doc.bloodgroup,
-    //   paymentStatus: doc.paymentStatus,
-    //   orderId: doc.orderId,
-    //   created_at: formatDate(doc.createdAt),
-    //   updated_by: formatDate(doc.updatedAt),
-    // }));
 
     res.status(200).json({
       status: "success",

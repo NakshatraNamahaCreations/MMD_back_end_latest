@@ -189,7 +189,7 @@ router.post("/paytm/callback", async (req, res) => {
     
        
           const mailOptions = {
-            from: "developersnnc@gmail.com",
+            from: "support@makemydocuments.com",
             to: transaction.email,
             subject: "Payment Successful - MakeMyDocuments",
             html: `

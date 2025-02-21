@@ -166,13 +166,14 @@ export const forgotPassword = async (req, res) => {
     let transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "developersnnc@gmail.com" , 
-        pass:"piqdsqtajfjhtcxn",
+        user: "support@makemydocuments.com" , 
+        pass:"LvVWgUdJRsqi",
+        // pass:"piqdsqtajfjhtcxn",
       },
     });
 
     let mailOptions = {
-      from: `"Support Team" <"developersnnc@gmail.com">`, 
+      from: `"Support Team" <"support@makemydocuments.com">`, 
       to: user.email,
       subject: "Your Account Credentials",
       html: `

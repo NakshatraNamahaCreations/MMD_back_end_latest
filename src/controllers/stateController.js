@@ -156,9 +156,9 @@ export const getOverdueLead = async (req, res) => {
     } else {
       leads = await Lead.find({
         $or: [
-          { assign: assign }, // Leads assigned to the user
-          { assign: "Unassigned" },   // Unassigned leads
-          { assign: null },     // Empty string assignments
+          { assign: assign },
+          { assign: "Unassigned" }, 
+          { assign: null },  
         ],
         status: "followup",
         followupDate: { $exists: true, $ne: null, $lt: new Date() },
@@ -229,10 +229,10 @@ export const getFollowups = async (req, res) => {
     if (user.role === "admin") {
       permission = "full-access";
     } else {
-      query.assign = assign; // Users see only their assigned follow-ups
+      query.assign = assign; 
     }
 
-    const leads = await Lead.find(query).sort({ followupDate: 1 }); // Sort by nearest follow-up date
+    const leads = await Lead.find(query).sort({ followupDate: 1 }); 
 
     if (!leads || leads.length === 0) {
       return res.status(404).json({
@@ -453,7 +453,14 @@ export const getDeadLead = async (req, res) => {
 
 export const getStatusCounts = async (req, res) => {
   try {
-    const { assign, role } = req.query; // Extract query params
+    const { assign, role } = req.query; 
+
+    let startOfTomorrow = new Date();
+    startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
+    startOfTomorrow.setHours(0, 0, 0, 0);
+
+    let endOfTomorrow = new Date(startOfTomorrow);
+    endOfTomorrow.setHours(23, 59, 59, 999);
 
     if (!role) {
       return res.status(400).json({
@@ -465,7 +472,7 @@ export const getStatusCounts = async (req, res) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    let filter = {}; // Default filter (admin sees all leads)
+    let filter = {}; 
 
     if (role !== "admin" && assign) {
       // If not admin, filter by assigned leads
@@ -505,6 +512,7 @@ export const getStatusCounts = async (req, res) => {
 
     const followups = await Lead.countDocuments({
       status: "followup",
+      followupDate: { $gte: startOfTomorrow },
       ...filter,
     });
 

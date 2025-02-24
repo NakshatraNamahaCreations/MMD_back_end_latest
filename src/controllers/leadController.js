@@ -58,7 +58,7 @@ export const  createLead = async (req, res) => {
           ? parseInt(lastLead.orderId.replace("MMD2025", ""), 10) + 1
           : 1;
 
-      const orderId = `MMD2025${String(lastId).padStart(3, "1")}`;
+      const orderId = `MMD2025${String(lastId).padStart(4, "1")}`;
 
     
       const newLead = new Lead({ ...leadData, orderId });

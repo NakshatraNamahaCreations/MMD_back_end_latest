@@ -261,8 +261,8 @@ router.post("/paytm/callback", async (req, res) => {
       `Payment status updated to ${paymentStatus} for Order ID: ${orderid}`
     );
 
-    const successRedirectURL = `https://makemydocuments.in/request_success?service=${service}`;
-    const failureRedirectURL = `https://makemydocuments.in/failure?service=${service}`;
+    const successRedirectURL = `https://makemydocuments.com/request_success?service=${service}`;
+    const failureRedirectURL = `https://makemydocuments.com/failure?service=${service}`;
 
     return res.redirect(
       paymentStatus === "PAID" ? successRedirectURL : failureRedirectURL

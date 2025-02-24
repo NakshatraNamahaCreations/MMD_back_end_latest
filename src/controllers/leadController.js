@@ -55,7 +55,7 @@ export const  createLead = async (req, res) => {
 
       const lastId =
         lastLead && lastLead.orderId
-          ? parseInt(lastLead.orderId.replace("MMD2025", ""), 10) + 1
+          ? parseInt(lastLead.orderId.replace("MMD20251", ""), 10) + 1
           : 1;
 
       const orderId = `MMD20250${String(lastId).padStart(5, "0")}`;

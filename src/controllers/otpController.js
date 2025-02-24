@@ -55,9 +55,7 @@ export const verifyOTP = async (req, res) => {
       });
     }
 
-    const url = `${process.env.MSG91_OTP_URL}?otp=${otp}&mobile=${mobilenumber}`;
-
-    console.log("Verifying OTP for:", mobilenumber, "OTP:", otp);
+    const url = `${process.env.MSG91_VERIFY_OTP}?otp=${otp}&mobile=91${mobilenumber}`;
 
     const response = await axios.get(url, {
       headers: { authkey: process.env.OTP_AUTH_KEY },
@@ -67,15 +65,13 @@ export const verifyOTP = async (req, res) => {
       res.status(200).json({
         status: "success",
         message: "OTP verification successful.",
-        mobile: mobilenumber,
-        api_response: response.data,
+
       });
     } else {
       res.status(400).json({
         status: "error",
         message: response.data.message || "OTP verification failed.",
-        mobile: mobilenumber,
-        api_response: response.data,
+
       });
     }
   } catch (error) {

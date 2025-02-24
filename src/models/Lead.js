@@ -96,6 +96,7 @@ const leadSchema = new mongoose.Schema(
     applicationType:{type: String, default:null},
     spouseName:{type: String, default:null},
     advancePaidThrough:{type: String, default:null},
+    safetyDeposit:{type:Sting,  default:null},
   },
   { timestamps: true }
 );

@@ -61,7 +61,7 @@ export const  createLead = async (req, res) => {
       // const orderId = `MMD2025${String(lastId).padStart(6, "1")}`;
       const orderId = `MMD2025${Date.now()}`;
 
-    
+      
       const newLead = new Lead({ ...leadData, orderId });
 
 

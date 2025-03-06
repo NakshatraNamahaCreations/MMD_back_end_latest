@@ -153,16 +153,19 @@ export const getOverdueLead = async (req, res) => {
         followupDate: { $exists: true, $ne: null, $lt: todayStart },
       });
       permission = "full-access";
+      console.log(leads.length);
     } else {
       leads = await Lead.find({
         $or: [
           { assign: assign },
-          { assign: "Unassigned" }, 
-          { assign: null },  
+
         ],
         status: "followup",
-        followupDate: { $exists: true, $ne: null, $lt: new Date() },
+        followupDate: { $exists: true, $ne: null, $lt: todayStart },
       });
+      
+            console.log(leads.length);
+
     }
 
     if (!leads || leads.length === 0) {

@@ -72,7 +72,7 @@ export const sendPanMessage = async (req, res) => {
     }
 
     const payload = {
-      flow_id: process.env.MSG91_TEMPLATE_ID,
+      flow_id: "6753ce34d6fc05394d234772",
       sender: process.env.MSG91_SENDER_ID,
       mobiles: mobile,
       var1: var1 || "",
@@ -126,7 +126,7 @@ export const sentSeniorCitzen = async (req, res) => {
     }
 
     const payload = {
-      flow_id: process.env.MSG91_TEMPLATE_ID,
+      flow_id: "67540ea7d6fc05611c583b32",
       sender: process.env.MSG91_SENDER_ID,
       mobiles: mobile,
       var1: var1 || "https://wa.me/9980097315",
